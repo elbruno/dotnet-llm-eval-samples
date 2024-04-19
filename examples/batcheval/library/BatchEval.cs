@@ -124,6 +124,8 @@ public class BatchEval<T>
                 Subject = modelOutput
             };
 
+            Console.WriteLine($"=====================================");
+            Console.WriteLine($"Processing Question");
             Console.WriteLine($"Q: {modelOutput.Input}");
             Console.WriteLine($"A: {modelOutput.Output}");
 
@@ -157,6 +159,8 @@ public class BatchEval<T>
             outputProcessor?.Process(evalOutput);
             
             results.EvalResults.Add(evalOutput);
+            Console.WriteLine($"=====================================");
+            Console.WriteLine();        
         }
 
         return results;
