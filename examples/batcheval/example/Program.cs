@@ -32,7 +32,7 @@ class Program
         var fileName = "assets/data.jsonl";
 
         Console.WriteLine($"Reading {fileName}, press a key to continue ...");
-        Console.ReadLine();
+        //Console.ReadLine();
 
         var kernelFunctions = kernel.CreatePluginFromPromptDirectory("Prompts");
 
@@ -41,6 +41,7 @@ class Program
         batchEval
             .AddEvaluator(new PromptScoreEval("coherence", kernel, kernelFunctions["coherence"]))
             .AddEvaluator(new PromptScoreEval("groundedness", kernel, kernelFunctions["groundedness"]))
+            .AddEvaluator(new PromptScoreEval("relevance", kernel, kernelFunctions["relevance"]))
             .AddEvaluator(new LenghtEval());
 
         BatchEvalResults results = await batchEval
@@ -48,12 +49,9 @@ class Program
             .WithJsonl(fileName)
             .Run();
 
-        var resultsCsv = ExportToCsv.ToCsv(results);
-        //delete file "output.csv" if exists, then write the new content
-        File.WriteAllText("output.csv", resultsCsv);
-
+        ExportToCsv.WriteCsv(results, "output.csv");        
 
         Console.WriteLine($"Complete.");
-        Console.ReadLine();
+        
     }
 }
