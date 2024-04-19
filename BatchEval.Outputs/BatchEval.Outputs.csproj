@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Csv" Version="2.0.93" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\examples\batcheval\library\BatchEval.Core.csproj" />
+  </ItemGroup>
+
+</Project>

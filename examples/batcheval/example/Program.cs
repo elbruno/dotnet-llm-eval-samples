@@ -31,8 +31,7 @@ class Program
 
         var fileName = "assets/data.jsonl";
 
-        Console.WriteLine($"Reading {fileName}, press a key to continue ...");
-        //Console.ReadLine();
+        Console.WriteLine($"Processing {fileName} ...");
 
         var kernelFunctions = kernel.CreatePluginFromPromptDirectory("Prompts");
 
@@ -49,7 +48,7 @@ class Program
             .WithJsonl(fileName)
             .Run();
 
-        ExportToCsv.WriteCsv(results, "output.csv");        
+        BatchEval.Outputs.ExportToCsv.WriteCsv(results, "output.csv");
 
         Console.WriteLine($"Complete.");
         
