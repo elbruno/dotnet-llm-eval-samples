@@ -21,6 +21,7 @@ public class BatchEval<T>
     IOutputProcessor? outputProcessor;
 
     public string? OtlpEndpoint { get; set; } = default!;
+    public string meterId { get; set; }
 
     public BatchEval<T> WithInputProcessor(IInputProcessor<T> inputProcessor)
     {
@@ -64,7 +65,12 @@ public class BatchEval<T>
 
     private async Task<BatchEvalResults> ProcessUserInputFile()
     {
-        var meterId = "llm-eval";
+        // if meterid is empty, use meterId = "llm-eval";
+        if (string.IsNullOrEmpty(meterId))
+        {
+            meterId = "llm-eval";
+        }
+
         var meter = CreateMeter(meterId);
 
         const int BufferSize = 128;

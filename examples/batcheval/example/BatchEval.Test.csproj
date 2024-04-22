@@ -23,10 +23,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="assets\data.jsonl.orig">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  <None Update="assets\data-58.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\data.jsonl">
+	  <None Update="assets\data-02.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Update="prompts\coherence\config.json">

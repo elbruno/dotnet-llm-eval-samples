@@ -10,7 +10,7 @@ internal class UserStoryCreator : IInputProcessor<UserInput>
 
     public UserStoryCreator(Kernel kernel)
     {
-        this.userStoryGenerator = UserStorySkill.Create(kernel);
+        userStoryGenerator = UserStorySkill.Create(kernel);
     }
 
     public async Task<ModelOutput> Process(UserInput userInput)
