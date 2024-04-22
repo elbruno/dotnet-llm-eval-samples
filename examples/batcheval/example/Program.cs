@@ -42,8 +42,8 @@ class Program
 
     static async Task Main()
     {
-        var kernelTest = CreateAndConfigureKernelTest();
         var kernelEval = CreateAndConfigureKernelEval();
+        var kernelTest = CreateAndConfigureKernelEval();
 
         var fileName = "assets/data-02.json";
 
@@ -66,6 +66,7 @@ class Program
             .Run();
 
         BatchEval.Outputs.ExportToCsv.WriteCsv(results, "output.csv");
+        SpectreConsoleOutput.DisplayResults(results);
 
         Console.WriteLine($"Complete.");
         

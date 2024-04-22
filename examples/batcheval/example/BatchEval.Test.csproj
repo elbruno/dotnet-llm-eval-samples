@@ -14,6 +14,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
 		<PackageReference Include="Microsoft.SemanticKernel" Version="1.0.1" />
 		<PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.7.0" />
+		<PackageReference Include="Spectre.Console" Version="0.48.1-preview.0.44" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -23,6 +24,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Update="assets\data-15.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="assets\data-58.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>

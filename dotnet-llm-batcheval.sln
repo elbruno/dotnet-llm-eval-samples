@@ -9,11 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BatchEval.Core", "examples\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserStoryGenerator", "examples\userstorygenerator\UserStoryGenerator\UserStoryGenerator.csproj", "{A261F7EA-4EE1-44F8-A730-39312B3AD4BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatchEval.Outputs", "BatchEval.Outputs\BatchEval.Outputs.csproj", "{9AEBA08D-0401-45E7-BC15-6A9DE497D939}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BatchEval.Outputs", "BatchEval.Outputs\BatchEval.Outputs.csproj", "{9AEBA08D-0401-45E7-BC15-6A9DE497D939}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{99214912-11D2-4D2B-9C27-D2E2AC307EE9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "User Story", "User Story", "{4885840A-33CC-4C16-8206-08153B814FBF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LLMs", "LLMs", "{58CFF34B-CA26-40E3-9E15-6495D257D7B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

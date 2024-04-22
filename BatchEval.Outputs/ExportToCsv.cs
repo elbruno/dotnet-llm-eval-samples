@@ -14,7 +14,7 @@ public static class ExportToCsv
     public static string CreateCsv(BatchEvalResults results)
     {
         // headers
-        var columnNames = new List<string> { "Input", "Input" };
+        var columnNames = new List<string> { "Input", "Output" };
         var first = results.EvalResults.First();
         foreach (var key in first.Results.Keys)
         {

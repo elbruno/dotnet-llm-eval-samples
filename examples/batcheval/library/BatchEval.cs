@@ -16,12 +16,21 @@ public class BatchEval<T>
 
     string? fileName;
 
+    bool showConsoleOutput = false;
+
     IInputProcessor<T>? inputProcessor;
 
     IOutputProcessor? outputProcessor;
 
     public string? OtlpEndpoint { get; set; } = default!;
     public string meterId { get; set; }
+
+    public BatchEval<T> ShowConsoleOutput(bool showConsoleOutput)
+    {
+        this.showConsoleOutput= showConsoleOutput;
+        return this;
+    }
+
 
     public BatchEval<T> WithInputProcessor(IInputProcessor<T> inputProcessor)
     {
@@ -130,10 +139,13 @@ public class BatchEval<T>
                 Subject = modelOutput
             };
 
-            Console.WriteLine($"=====================================");
-            Console.WriteLine($"Processing Question");
-            Console.WriteLine($"Q: {modelOutput.Input}");
-            Console.WriteLine($"A: {modelOutput.Output}");
+            if (showConsoleOutput)
+            {
+                Console.WriteLine($"=====================================");
+                Console.WriteLine($"Processing Question");
+                Console.WriteLine($"Q: {modelOutput.Input}");
+                Console.WriteLine($"A: {modelOutput.Output}");
+            }
 
             evalMetrics.PromptCounter.Add(1);
 
@@ -141,17 +153,20 @@ public class BatchEval<T>
             {
                 var score = await evaluator.Eval(modelOutput);
 
-                Console.WriteLine($"EVAL: {evaluator.Id.ToLowerInvariant()} SCORE: {score}");
+                if (showConsoleOutput)
+                    Console.WriteLine($"EVAL: {evaluator.Id.ToLowerInvariant()} SCORE: {score}");
                 
                 evalMetrics.ScoreHistograms[evaluator.Id.ToLowerInvariant()].Record(score);
                 evalOutput.Results.Add(evaluator.Id.ToLowerInvariant(), score);
             }
 
             foreach (var evaluator in boolEvaluators)
-            {
-                var evalResult = await evaluator.Eval(modelOutput);
+                {
+                    var evalResult = await evaluator.Eval(modelOutput);
 
-                Console.WriteLine($"EVAL: {evaluator.Id.ToLowerInvariant()} RESULT: {evalResult}");
+                    if (showConsoleOutput)
+                    
+                        Console.WriteLine($"EVAL: {evaluator.Id.ToLowerInvariant()} RESULT: {evalResult}");
 
                 evalOutput.Results.Add(evaluator.Id.ToLowerInvariant(), evalResult);
 
@@ -165,8 +180,11 @@ public class BatchEval<T>
             outputProcessor?.Process(evalOutput);
             
             results.EvalResults.Add(evalOutput);
-            Console.WriteLine($"=====================================");
-            Console.WriteLine();        
+                if (showConsoleOutput)
+                {
+                    Console.WriteLine($"=====================================");
+                    Console.WriteLine();
+                }
         }
 
         return results;
