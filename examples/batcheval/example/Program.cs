@@ -22,7 +22,11 @@ class Program
        
         var builder = Kernel.CreateBuilder();
 
-        builder.AddOpenAIChatCompletion("llama3", "api-key", httpClient: client);
+        #pragma warning disable SKEXP0001, SKEXP0003, SKEXP0010, SKEXP0011, SKEXP0050, SKEXP0052
+        builder.AddOpenAIChatCompletion(
+            modelId: "phi3", 
+            endpoint: new Uri("http://localhost:11434"), 
+            apiKey:"api");
 
         return builder.Build();
     }
