@@ -2,9 +2,9 @@ using UserStoryGenerator;
 using BatchEval.Core;
 using Microsoft.SemanticKernel;
 
-namespace BatchEval;
+namespace UserStoryCreator;
 
-internal class UserStoryCreator : IInputProcessor<UserInput>
+public class UserStoryCreator : IInputProcessor
 {
     private readonly UserStorySkill userStoryGenerator;
 
@@ -13,7 +13,7 @@ internal class UserStoryCreator : IInputProcessor<UserInput>
         userStoryGenerator = UserStorySkill.Create(kernel);
     }
 
-    public async Task<ModelOutput> Process(UserInput userInput)
+    public async Task<ModelOutput> Process(BatchEval.Data.UserInput userInput)
     {
         var userStory = await userStoryGenerator.GetUserStory(
             userInput.Description,

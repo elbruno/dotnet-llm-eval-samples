@@ -1,6 +1,8 @@
+using BatchEval.Data;
+
 namespace BatchEval.Core;
 
-public interface IInputProcessor<T>
+public interface IInputProcessor
 {
-    public Task<ModelOutput> Process(T userInput);
+    public Task<ModelOutput> Process(BatchEval.Data.UserInput userInput);    
 }

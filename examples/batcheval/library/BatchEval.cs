@@ -4,6 +4,7 @@ using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using System.Diagnostics.Metrics;
+using System.Reflection.Metadata;
 using System.Text;
 
 namespace BatchEval.Core;
@@ -18,7 +19,7 @@ public class BatchEval<T>
 
     bool showConsoleOutput = false;
 
-    IInputProcessor<T>? inputProcessor;
+    IInputProcessor? inputProcessor;
 
     IOutputProcessor? outputProcessor;
 
@@ -27,12 +28,12 @@ public class BatchEval<T>
 
     public BatchEval<T> ShowConsoleOutput(bool showConsoleOutput)
     {
-        this.showConsoleOutput= showConsoleOutput;
+        this.showConsoleOutput = showConsoleOutput;
         return this;
     }
 
 
-    public BatchEval<T> WithInputProcessor(IInputProcessor<T> inputProcessor)
+    public BatchEval<T> WithInputProcessor(IInputProcessor inputProcessor)
     {
         this.inputProcessor = inputProcessor;
         return this;
@@ -93,10 +94,11 @@ public class BatchEval<T>
 
     private EvalMetrics InitCounters(Meter meter)
     {
-        var evalMetrics = new EvalMetrics() {
+        var evalMetrics = new EvalMetrics()
+        {
             PromptCounter = meter.CreateCounter<int>($"prompt.counter")
         };
-        
+
         foreach (var evaluator in intEvaluators)
         {
             var histogram = meter.CreateHistogram<int>($"{evaluator.Id.ToLowerInvariant()}.score");
@@ -106,11 +108,11 @@ public class BatchEval<T>
         foreach (var evaluator in boolEvaluators)
         {
             evalMetrics.BooleanCounters.Add(
-                $"{evaluator.Id.ToLowerInvariant()}.failure", 
+                $"{evaluator.Id.ToLowerInvariant()}.failure",
                 meter.CreateCounter<int>($"{evaluator.Id.ToLowerInvariant()}.failure"));
 
             evalMetrics.BooleanCounters.Add(
-                $"{evaluator.Id.ToLowerInvariant()}.success", 
+                $"{evaluator.Id.ToLowerInvariant()}.success",
                 meter.CreateCounter<int>($"{evaluator.Id.ToLowerInvariant()}.success"));
         }
 
@@ -130,7 +132,7 @@ public class BatchEval<T>
         string? line;
         while ((line = await streamReader.ReadLineAsync()) != null)
         {
-            var userInput = System.Text.Json.JsonSerializer.Deserialize<T>(line);
+            var userInput = System.Text.Json.JsonSerializer.Deserialize<BatchEval.Data.UserInput>(line);
 
             var modelOutput = await inputProcessor!.Process(userInput!);
 
@@ -155,36 +157,108 @@ public class BatchEval<T>
 
                 if (showConsoleOutput)
                     Console.WriteLine($"EVAL: {evaluator.Id.ToLowerInvariant()} SCORE: {score}");
-                
+
                 evalMetrics.ScoreHistograms[evaluator.Id.ToLowerInvariant()].Record(score);
                 evalOutput.Results.Add(evaluator.Id.ToLowerInvariant(), score);
             }
 
             foreach (var evaluator in boolEvaluators)
-                {
-                    var evalResult = await evaluator.Eval(modelOutput);
+            {
+                var evalResult = await evaluator.Eval(modelOutput);
 
-                    if (showConsoleOutput)
-                    
-                        Console.WriteLine($"EVAL: {evaluator.Id.ToLowerInvariant()} RESULT: {evalResult}");
+                if (showConsoleOutput)
+
+                    Console.WriteLine($"EVAL: {evaluator.Id.ToLowerInvariant()} RESULT: {evalResult}");
 
                 evalOutput.Results.Add(evaluator.Id.ToLowerInvariant(), evalResult);
 
-                if (evalResult) {
+                if (evalResult)
+                {
                     evalMetrics.BooleanCounters[$"{evaluator.Id.ToLowerInvariant()}.success"].Add(1);
-                } else {
+                }
+                else
+                {
                     evalMetrics.BooleanCounters[$"{evaluator.Id.ToLowerInvariant()}.failure"].Add(1);
                 }
             }
 
             outputProcessor?.Process(evalOutput);
-            
+
             results.EvalResults.Add(evalOutput);
-                if (showConsoleOutput)
-                {
-                    Console.WriteLine($"=====================================");
-                    Console.WriteLine();
-                }
+            if (showConsoleOutput)
+            {
+                Console.WriteLine($"=====================================");
+                Console.WriteLine();
+            }
+        }
+
+        return results;
+    }
+
+    public async Task<BatchEvalResults> ProcessSingle(
+       Meter meter, IInputProcessor? inputProcessor, Data.UserInput userInput)
+    {
+        var evalMetrics = InitCounters(meter);
+
+        outputProcessor?.Init();
+
+        var results = new BatchEvalResults();
+
+        var modelOutput = await inputProcessor!.Process(userInput!);
+
+        var evalOutput = new BatchEvalPromptOutput()
+        {
+            Subject = modelOutput
+        };
+
+        if (showConsoleOutput)
+        {
+            Console.WriteLine($"=====================================");
+            Console.WriteLine($"Processing Question");
+            Console.WriteLine($"Q: {modelOutput.Input}");
+            Console.WriteLine($"A: {modelOutput.Output}");
+        }
+
+        evalMetrics.PromptCounter.Add(1);
+
+        foreach (var evaluator in intEvaluators)
+        {
+            var score = await evaluator.Eval(modelOutput);
+
+            if (showConsoleOutput)
+                Console.WriteLine($"EVAL: {evaluator.Id.ToLowerInvariant()} SCORE: {score}");
+
+            evalMetrics.ScoreHistograms[evaluator.Id.ToLowerInvariant()].Record(score);
+            evalOutput.Results.Add(evaluator.Id.ToLowerInvariant(), score);
+        }
+
+        foreach (var evaluator in boolEvaluators)
+        {
+            var evalResult = await evaluator.Eval(modelOutput);
+
+            if (showConsoleOutput)
+
+                Console.WriteLine($"EVAL: {evaluator.Id.ToLowerInvariant()} RESULT: {evalResult}");
+
+            evalOutput.Results.Add(evaluator.Id.ToLowerInvariant(), evalResult);
+
+            if (evalResult)
+            {
+                evalMetrics.BooleanCounters[$"{evaluator.Id.ToLowerInvariant()}.success"].Add(1);
+            }
+            else
+            {
+                evalMetrics.BooleanCounters[$"{evaluator.Id.ToLowerInvariant()}.failure"].Add(1);
+            }
+        }
+
+        outputProcessor?.Process(evalOutput);
+
+        results.EvalResults.Add(evalOutput);
+        if (showConsoleOutput)
+        {
+            Console.WriteLine($"=====================================");
+            Console.WriteLine();
         }
 
         return results;
@@ -205,7 +279,9 @@ public class BatchEval<T>
         if (string.IsNullOrEmpty(OtlpEndpoint))
         {
             builder.AddConsoleExporter();
-        } else {
+        }
+        else
+        {
             builder.AddOtlpExporter(otlpOptions =>
             {
                 otlpOptions.Endpoint = new Uri(OtlpEndpoint);
@@ -213,7 +289,7 @@ public class BatchEval<T>
         }
 
         builder.AddMeter("Microsoft.SemanticKernel*");
-    
+
         builder.Build();
 
         return new Meter(meterId);

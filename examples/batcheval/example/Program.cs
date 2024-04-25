@@ -7,6 +7,8 @@ using System.Diagnostics.Metrics;
 using System.Text;
 using BatchEval.Core;
 using BatchEval.Test;
+using BatchEval.Data;
+using System.Threading;
 
 namespace BatchEval;
 
@@ -42,6 +44,7 @@ class Program
 
     static async Task Main()
     {
+        // kernels
         var kernelEval = CreateAndConfigureKernelEval();
         var kernelTest = CreateAndConfigureKernelEval();
 
@@ -51,7 +54,7 @@ class Program
 
         var kernelEvalFunctions = kernelEval.CreatePluginFromPromptDirectory("Prompts");
 
-        var batchEval = new BatchEval<UserInput>();
+        var batchEval = new BatchEval<Data.UserInput>();
         batchEval.meterId = "phi-llm";
 
         batchEval
@@ -61,12 +64,27 @@ class Program
             .AddEvaluator(new LenghtEval());
 
         BatchEvalResults results = await batchEval
-            .WithInputProcessor(new UserStoryCreator(kernelTest))
+            .WithInputProcessor(new UserStoryCreator.UserStoryCreator(kernelTest))
             .WithJsonl(fileName)
             .Run();
 
-        BatchEval.Outputs.ExportToCsv.WriteCsv(results, "output.csv");
+        Outputs.ExportToCsv.WriteCsv(results, "output.csv");
         SpectreConsoleOutput.DisplayResults(results);
+
+        Console.WriteLine("");
+        Console.WriteLine($"Processing single input ...");
+
+        Meter meter = new Meter("phi-llm");
+        IInputProcessor inputProcessor = new UserStoryCreator.UserStoryCreator(kernelTest);
+        var userInput = new UserInput
+        {
+            Description = "Fix a broken appliance",
+            ProjectContext = "At home",
+            Persona = "Homeowner"
+        };
+        var resultsSingle = await batchEval.ProcessSingle(meter, inputProcessor, userInput);
+        SpectreConsoleOutput.DisplayResults(resultsSingle);
+
 
         Console.WriteLine($"Complete.");
         

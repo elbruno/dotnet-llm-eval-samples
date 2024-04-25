@@ -1,6 +1,6 @@
-namespace BatchEval;
+namespace BatchEval.Data;
 
-internal struct UserInput
+public class UserInput
 {
     public string Description { get; set; }
     public string ProjectContext { get; set; }
