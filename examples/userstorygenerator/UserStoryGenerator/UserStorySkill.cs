@@ -35,16 +35,7 @@ public class UserStorySkill
         };
 
         var result = await _createUserStoryFunction.InvokeAsync(_kernel, context);
-
-
-        if (!result.ToString().IsValidJson())
-        {
-            Console.WriteLine("LLM Response is not a valid JSON.");
-            Console.WriteLine(result.ToString());
-            Console.WriteLine("");
-            throw new Exception($"Invalid prompt result, not valid json. Response: {result.ToString()}");
-        }
-
+        
         var userStory = JsonSerializer.Deserialize<UserStory>(result.ToString(), new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase

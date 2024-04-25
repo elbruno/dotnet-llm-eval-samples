@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿#pragma warning disable SKEXP0001, SKEXP0003, SKEXP0010, SKEXP0011, SKEXP0050, SKEXP0052
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
@@ -22,9 +24,8 @@ class Program
        
         var builder = Kernel.CreateBuilder();
 
-        #pragma warning disable SKEXP0001, SKEXP0003, SKEXP0010, SKEXP0011, SKEXP0050, SKEXP0052
         builder.AddOpenAIChatCompletion(
-            modelId: "phi3", 
+            modelId: "llama3", 
             endpoint: new Uri("http://localhost:11434"), 
             apiKey:"api");
 
@@ -52,7 +53,9 @@ class Program
 
         // create kernels
         var kernelEval = CreateAndConfigureKernelEval();
-        var kernelTest = CreateAndConfigureKernelEval();
+        var kernelTest = CreateAndConfigureKernelTest();
+
+        SpectreConsoleOutput.DisplayKernels(kernelTest, kernelEval);
 
         // create batcheval and add evaluators
         var kernelEvalFunctions = kernelEval.CreatePluginFromPromptDirectory("Prompts");
