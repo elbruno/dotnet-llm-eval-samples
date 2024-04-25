@@ -21,7 +21,7 @@
 		<ProjectReference Include="..\BatchEval.Core\BatchEval.Core.csproj" />		
 		<ProjectReference Include="..\BatchEval.Data\BatchEval.Data.csproj" />
 		<ProjectReference Include="..\BatchEval.Outputs\BatchEval.Outputs.csproj" />
-		<ProjectReference Include="..\UserStoryCreator.Engine\UserStoryCreator.csproj" />
+		<ProjectReference Include="..\UserStoryCreator\UserStoryCreator.csproj" />
 		<ProjectReference Include="..\UserStoryGenerator\UserStoryGenerator.csproj" />
 	</ItemGroup>
 

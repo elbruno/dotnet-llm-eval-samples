@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BatchEval.Core\BatchEval.Core.csproj" />
     <ProjectReference Include="..\BatchEval.Data\BatchEval.Data.csproj" />
+    <ProjectReference Include="..\UserStoryGenerator\UserStoryGenerator.csproj" />
   </ItemGroup>
 
 </Project>
