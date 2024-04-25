@@ -17,13 +17,8 @@ namespace BatchEval;
 class Program
 {
     private static Kernel CreateAndConfigureKernelTest()
-    {
-        var customHttpMessageHandler = new CustomHttpMessageHandler();
-        customHttpMessageHandler.CustomLlmUrl = "http://localhost:11434";
-        HttpClient client = new HttpClient(customHttpMessageHandler);
-       
+    {       
         var builder = Kernel.CreateBuilder();
-
         builder.AddOpenAIChatCompletion(
             modelId: "llama3", 
             endpoint: new Uri("http://localhost:11434"), 

@@ -47,7 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BatchEval.Data\BatchEval.Data.csproj" />
+    <ProjectReference Include="..\BatchEval.Data\BatchEval.Data.csproj" />
   </ItemGroup>
 
 </Project>

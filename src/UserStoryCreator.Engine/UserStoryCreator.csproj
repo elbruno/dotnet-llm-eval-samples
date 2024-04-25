@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BatchEval.Core\BatchEval.Core.csproj" />
     <ProjectReference Include="..\BatchEval.Data\BatchEval.Data.csproj" />
-    <ProjectReference Include="..\examples\batcheval\library\BatchEval.Core.csproj" />
-    <ProjectReference Include="..\examples\userstorygenerator\UserStoryGenerator\UserStoryGenerator.csproj" />
+    <ProjectReference Include="..\UserStoryGenerator\UserStoryGenerator.csproj" />    
   </ItemGroup>
 
 </Project>

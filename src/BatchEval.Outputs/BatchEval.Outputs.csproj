@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\examples\batcheval\library\BatchEval.Core.csproj" />
+    <ProjectReference Include="..\BatchEval.Core\BatchEval.Core.csproj" />
   </ItemGroup>
 
 </Project>
