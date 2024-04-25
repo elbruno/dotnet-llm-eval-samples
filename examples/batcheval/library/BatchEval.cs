@@ -123,8 +123,6 @@ public class BatchEval<T>
        StreamReader streamReader,
        Meter meter)
     {
-        var evalMetrics = InitCounters(meter);
-
         outputProcessor?.Init();
 
         var results = new BatchEvalResults();
@@ -132,63 +130,12 @@ public class BatchEval<T>
         string? line;
         while ((line = await streamReader.ReadLineAsync()) != null)
         {
-            var userInput = System.Text.Json.JsonSerializer.Deserialize<BatchEval.Data.UserInput>(line);
+            var userInput = System.Text.Json.JsonSerializer.Deserialize<Data.UserInput>(line);
 
-            var modelOutput = await inputProcessor!.Process(userInput!);
-
-            var evalOutput = new BatchEvalPromptOutput()
+            var singleResults = await ProcessSingle(meter, userInput, inputProcessor, outputProcessor);
+            foreach (var evalResult in singleResults.EvalResults)
             {
-                Subject = modelOutput
-            };
-
-            if (showConsoleOutput)
-            {
-                Console.WriteLine($"=====================================");
-                Console.WriteLine($"Processing Question");
-                Console.WriteLine($"Q: {modelOutput.Input}");
-                Console.WriteLine($"A: {modelOutput.Output}");
-            }
-
-            evalMetrics.PromptCounter.Add(1);
-
-            foreach (var evaluator in intEvaluators)
-            {
-                var score = await evaluator.Eval(modelOutput);
-
-                if (showConsoleOutput)
-                    Console.WriteLine($"EVAL: {evaluator.Id.ToLowerInvariant()} SCORE: {score}");
-
-                evalMetrics.ScoreHistograms[evaluator.Id.ToLowerInvariant()].Record(score);
-                evalOutput.Results.Add(evaluator.Id.ToLowerInvariant(), score);
-            }
-
-            foreach (var evaluator in boolEvaluators)
-            {
-                var evalResult = await evaluator.Eval(modelOutput);
-
-                if (showConsoleOutput)
-
-                    Console.WriteLine($"EVAL: {evaluator.Id.ToLowerInvariant()} RESULT: {evalResult}");
-
-                evalOutput.Results.Add(evaluator.Id.ToLowerInvariant(), evalResult);
-
-                if (evalResult)
-                {
-                    evalMetrics.BooleanCounters[$"{evaluator.Id.ToLowerInvariant()}.success"].Add(1);
-                }
-                else
-                {
-                    evalMetrics.BooleanCounters[$"{evaluator.Id.ToLowerInvariant()}.failure"].Add(1);
-                }
-            }
-
-            outputProcessor?.Process(evalOutput);
-
-            results.EvalResults.Add(evalOutput);
-            if (showConsoleOutput)
-            {
-                Console.WriteLine($"=====================================");
-                Console.WriteLine();
+                results.EvalResults.Add(evalResult);
             }
         }
 
@@ -196,7 +143,7 @@ public class BatchEval<T>
     }
 
     public async Task<BatchEvalResults> ProcessSingle(
-       Meter meter, IInputProcessor? inputProcessor, Data.UserInput userInput)
+       Meter meter, Data.UserInput userInput, IInputProcessor? inputProcessor, IOutputProcessor? outputProcessor = null)
     {
         var evalMetrics = InitCounters(meter);
 

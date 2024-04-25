@@ -48,17 +48,15 @@ class Program
 
     static async Task Main()
     {
-        // kernels
+        Console.WriteLine($"Creating kernels ...");
+
+        // create kernels
         var kernelEval = CreateAndConfigureKernelEval();
         var kernelTest = CreateAndConfigureKernelEval();
 
-        var fileName = "assets/data-02.json";
-
-        Console.WriteLine($"Processing {fileName} ...");
-
+        // create batcheval and add evaluators
         var kernelEvalFunctions = kernelEval.CreatePluginFromPromptDirectory("Prompts");
-
-        var batchEval = new BatchEval<Data.UserInput>();
+        var batchEval = new BatchEval<UserInput>();
         batchEval.meterId = "phi-llm";
 
         batchEval
@@ -67,17 +65,11 @@ class Program
             .AddEvaluator(new PromptScoreEval("relevance", kernelEval, kernelEvalFunctions["relevance"]))
             .AddEvaluator(new LenghtEval());
 
-        BatchEvalResults results = await batchEval
-            .WithInputProcessor(new UserStoryCreator.UserStoryCreator(kernelTest))
-            .WithJsonl(fileName)
-            .Run();
-
-        Outputs.ExportToCsv.WriteCsv(results, "output.csv");
-        SpectreConsoleOutput.DisplayResults(results);
 
         Console.WriteLine("");
-        Console.WriteLine($"Processing single input ...");
+        Console.WriteLine($"Processing single user input ...");
 
+        // evaluate a single input
         Meter meter = new Meter("phi-llm");
         IInputProcessor inputProcessor = new UserStoryCreator.UserStoryCreator(kernelTest);
         var userInput = new UserInput
@@ -86,8 +78,24 @@ class Program
             ProjectContext = "At home",
             Persona = "Homeowner"
         };
-        var resultsSingle = await batchEval.ProcessSingle(meter, inputProcessor, userInput);
+        var resultsSingle = await batchEval.ProcessSingle(meter, userInput, inputProcessor);
         SpectreConsoleOutput.DisplayResults(resultsSingle);
+
+
+        // evaluate a batch of inputs
+        var fileName = "assets/data-02.json";
+        Console.WriteLine("");
+        Console.WriteLine($"Processing batch of inputs ...");
+        Console.WriteLine($"Processing {fileName} ...");
+
+        BatchEvalResults results = await batchEval
+            .WithInputProcessor(new UserStoryCreator.UserStoryCreator(kernelTest))
+            .WithJsonl(fileName)
+            .Run();                
+        SpectreConsoleOutput.DisplayResults(results);
+
+        // export results to csv
+        Outputs.ExportToCsv.WriteCsv(results, "output.csv");
 
 
         Console.WriteLine($"Complete.");
