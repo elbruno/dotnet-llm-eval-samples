@@ -16,7 +16,7 @@ class Program
         // ========================================
         // create kernels
         // ========================================
-        SpectreConsoleOutput.DisplaySubTitle($"LLM Kernels");
+        SpectreConsoleOutput.DisplayTitleH2($"LLM Kernels");
         var kernelEval = KernelFactory.CreateAndConfigureKernelEval();
         var kernelTest = KernelFactory.CreateAndConfigureKernelTest();
         SpectreConsoleOutput.DisplayKernels(kernelTest, kernelEval);
@@ -36,7 +36,7 @@ class Program
 
 
         Console.WriteLine("");
-        SpectreConsoleOutput.DisplaySubTitle($"Processing single items: QA and User Story");
+        SpectreConsoleOutput.DisplayTitleH2($"Processing single items: QA and User Story");
 
         // ========================================
         // evaluate a single Question and Answer
@@ -64,12 +64,13 @@ class Program
         };
         processResult = await userstoryProcessor.Process(userInput);
         results = await batchEval.ProcessSingle(processResult);
+        results.EvalRunName = "User Story Run 1";
         SpectreConsoleOutput.DisplayResults(results);
 
         // ========================================
         // evaluate a batch of inputs for User Stories from a file
         // ========================================
-        SpectreConsoleOutput.DisplaySubTitle("Processing batch of User Stories");
+        SpectreConsoleOutput.DisplayTitleH2("Processing batch of User Stories");
         var fileName = "assets/data-02.json";
         Console.WriteLine("");
         Console.WriteLine($"Processing {fileName} ...");
@@ -80,10 +81,11 @@ class Program
         
         var modelOutputCollection = await userStoryCreator.ProcessCollection(userInputCollection);
         results = await batchEval.ProcessCollection(modelOutputCollection);
+        results.EvalRunName = "User Story collection from file";
         SpectreConsoleOutput.DisplayResults(results);
 
-        // complete
-        SpectreConsoleOutput.DisplaySubTitle("Complete.");
+        // complete        
+        SpectreConsoleOutput.DisplayTitleH2("Complete.");
         
     }
 }

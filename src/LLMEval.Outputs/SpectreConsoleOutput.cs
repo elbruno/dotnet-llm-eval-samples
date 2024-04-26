@@ -12,16 +12,21 @@ namespace LLMEval.Output;
 
 public static class SpectreConsoleOutput
 {
-    public static void DisplayTitle(string title = "LLM Eval Results")
+    public static void DisplayTitle(string title = ".NET - LLM Eval")
     {
         AnsiConsole.Write(new FigletText(title).Centered().Color(Color.Purple));
     }
 
-    public static void DisplaySubTitle(string subtitle)
+    public static void DisplayTitleH2(string subtitle)
     {
-        // add a header using === before the subtitle
         AnsiConsole.MarkupLine($"[bold]=== {subtitle} ===[/]");
         AnsiConsole.MarkupLine($"[bold][/]");        
+    }
+
+    public static void DisplayTitleH3(string subtitle)
+    {
+        AnsiConsole.MarkupLine($"[bold]>> {subtitle}[/]");
+        AnsiConsole.MarkupLine($"[bold][/]");
     }
 
     public static void DisplayKernels(Kernel testKernel, Kernel evalKernel)
@@ -64,13 +69,15 @@ public static class SpectreConsoleOutput
     {
         foreach (var atr in services)
         {
-            List<Renderable> row = [new Markup($"[bold]= {kernelName} =[/]"), new Text(serviceName), new Text($"{atr.Key} - {atr.Value}")];
+            List<Renderable> row = [new Markup($"[bold]< {kernelName} >[/]"), new Text(serviceName), new Text($"{atr.Key} - {atr.Value}")];
             table.AddRow(row.ToArray());
         }
     }
 
     public static void DisplayResults(LLMEvalResults results)
     {
+        DisplayTitleH3(results.EvalRunName);
+
         // Create a table
         var table = new Table();
 
@@ -110,5 +117,6 @@ public static class SpectreConsoleOutput
 
         //Render the table to the console
         AnsiConsole.Write(table);
+        AnsiConsole.WriteLine();
     }
 }
