@@ -3,6 +3,7 @@ using LLMEval.Core;
 using LLMEval.Data;
 using LLMEval.Output;
 using LLMEval.Test;
+using QAGenerator;
 
 namespace LLMEval;
 
@@ -12,13 +13,12 @@ class Program
     {
         SpectreConsoleOutput.DisplayTitle();
 
-
         // ========================================
         // create kernels
         // ========================================
         SpectreConsoleOutput.DisplayTitleH2($"LLM Kernels");
         var kernelEval = KernelFactory.CreateAndConfigureKernelEval();
-        var kernelTest = KernelFactory.CreateAndConfigureKernelTest();
+        var kernelTest = KernelFactory.CreateAndConfigureKernelEval();
         SpectreConsoleOutput.DisplayKernels(kernelTest, kernelEval);
 
         // ========================================
@@ -39,16 +39,26 @@ class Program
         SpectreConsoleOutput.DisplayTitleH2($"Processing single items: 2 QAs and 1 User Story");
 
         // ========================================
-        // evaluate a single Question and Answer
+        // evaluate a random generated Question and Answer
         // ========================================
         var qaProcessor = new QACreator.QACreator(kernelTest);
-        var qa = new QA
+        var qa = await QALLMGenerator.GenerateQAusingLLM(kernelTest);
+        var processResult = await qaProcessor.Process(qa);
+        var results = await batchEval.ProcessSingle(processResult);
+        results.EvalRunName = "QA Run 1";
+        SpectreConsoleOutput.DisplayResults(results);
+
+        // ========================================
+        // evaluate 2 Question and Answer
+        // ========================================
+        qaProcessor = new QACreator.QACreator(kernelTest);
+        qa = new Data.QA
         {
             Question = "How do you suggest to crack an egg? Suggest the most common way to do this.",
             Answer = "Tap the egg on a flat surface and then crack the shell"
         };
-        var processResult = await qaProcessor.Process(qa);
-        var results = await batchEval.ProcessSingle(processResult);
+        processResult = await qaProcessor.Process(qa);
+        results = await batchEval.ProcessSingle(processResult);
         results.EvalRunName = "QA Run 1";
         SpectreConsoleOutput.DisplayResults(results);
 

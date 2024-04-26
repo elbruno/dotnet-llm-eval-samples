@@ -29,4 +29,17 @@
     <Page Include="_prompts\qa\config.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LLMEval.Data\LLMEval.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="_prompts\qagen\config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="_prompts\qagen\skprompt.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
