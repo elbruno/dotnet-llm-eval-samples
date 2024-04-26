@@ -19,14 +19,14 @@ public static class SpectreConsoleOutput
 
     public static void DisplayTitleH2(string subtitle)
     {
-        AnsiConsole.MarkupLine($"[bold]=== {subtitle} ===[/]");
-        AnsiConsole.MarkupLine($"[bold][/]");        
+        AnsiConsole.MarkupLine($"[bold][blue]=== {subtitle} ===[/][/]");
+        AnsiConsole.MarkupLine($"");        
     }
 
     public static void DisplayTitleH3(string subtitle)
     {
         AnsiConsole.MarkupLine($"[bold]>> {subtitle}[/]");
-        AnsiConsole.MarkupLine($"[bold][/]");
+        AnsiConsole.MarkupLine($"");
     }
 
     public static List<string> GetMenuOptions()
@@ -54,6 +54,12 @@ public static class SpectreConsoleOutput
                     "[green]<enter>[/] to accept)[/]")
                 .AddChoices(GetMenuOptions()));
         return scenarios;
+    }
+
+    public static int AskForNumber(string question)
+    {
+        var number = AnsiConsole.Ask<int>(@$"[green]{question}[/]");
+        return number;
     }
 
     public static void DisplayKernels(Kernel testKernel, Kernel evalKernel)

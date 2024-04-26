@@ -126,8 +126,11 @@ class Program
             // ========================================
             SpectreConsoleOutput.DisplayTitleH2("Processing LLM generated QAs");
 
+            // ask for the number of QAs to generate
+            var numberOfQAs = SpectreConsoleOutput.AskForNumber("How many QAs do you want to generate?");
+
             // generate a collection of QAs using llms
-            var llmGenQAs = await QALLMGenerator.GenerateQACollection(kernelTest);
+            var llmGenQAs = await QALLMGenerator.GenerateQACollection(kernelTest, numberOfQAs);
             var qaProcessor = new QACreator.QACreator(kernelTest);
             var modelOutputCollection = await qaProcessor.ProcessCollection(llmGenQAs);
             var results = await batchEval.ProcessCollection(modelOutputCollection);
