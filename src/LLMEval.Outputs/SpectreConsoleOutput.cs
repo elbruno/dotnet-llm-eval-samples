@@ -29,6 +29,33 @@ public static class SpectreConsoleOutput
         AnsiConsole.MarkupLine($"[bold][/]");
     }
 
+    public static List<string> GetMenuOptions()
+    {
+        var list = new List<string> {
+            "1 generated QA using LLM",
+            "2 harcoded QAs",
+            "1 harcoded User Story",
+            "List of User Stories from a file",
+            "List of QAs generated using a LLM"};
+        return list;
+    }
+
+    public static List<string> SelectScenarios()
+    {
+        // Ask for the user's favorite fruits
+        var scenarios = AnsiConsole.Prompt(
+            new MultiSelectionPrompt<string>()
+                .Title("Select the [green].NET LLM Eval scenarios[/] to run?")
+                .PageSize(10)
+                .Required(true)
+                .MoreChoicesText("[grey](Move up and down to reveal more scenarios)[/]")
+                .InstructionsText(
+                    "[grey](Press [blue]<space>[/] to toggle a scenario, " +
+                    "[green]<enter>[/] to accept)[/]")
+                .AddChoices(GetMenuOptions()));
+        return scenarios;
+    }
+
     public static void DisplayKernels(Kernel testKernel, Kernel evalKernel)
     {
         // Create a table

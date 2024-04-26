@@ -34,89 +34,106 @@ class Program
             .AddEvaluator(new LenghtEval());
         batchEval.SetMeterId("llama3");
 
+        var scenarios = SpectreConsoleOutput.SelectScenarios();
 
         Console.WriteLine("");
         SpectreConsoleOutput.DisplayTitleH2($"Processing single items: 1 LLM generated QA, 2 QAs and 1 User Story");
 
-        // ========================================
-        // evaluate a random generated Question and Answer
-        // ========================================
-        var qa = await QALLMGenerator.GenerateQA(kernelTest);
-        var qaProcessor = new QACreator.QACreator(kernelTest);
-        var processResult = await qaProcessor.Process(qa);
-        var results = await batchEval.ProcessSingle(processResult);
-        results.EvalRunName = "Auto generated QA using LLM";
-        SpectreConsoleOutput.DisplayResults(results);
-
-        // ========================================
-        // evaluate 2 Question and Answer
-        // ========================================
-        qaProcessor = new QACreator.QACreator(kernelTest);
-        qa = new Data.QA
+        if(scenarios.Contains("1 generated QA using LLM"))
         {
-            Question = "How do you suggest to crack an egg? Suggest the most common way to do this.",
-            Answer = "Tap the egg on a flat surface and then crack the shell",
-            Topic = "Cooking"
-        };
-        processResult = await qaProcessor.Process(qa);
-        results = await batchEval.ProcessSingle(processResult);
-        results.EvalRunName = "Harcoded QA 1";
-        SpectreConsoleOutput.DisplayResults(results);
+            // ========================================
+            // evaluate a random generated Question and Answer
+            // ========================================
+            var qa = await QALLMGenerator.GenerateQA(kernelTest);
+            var qaProcessor = new QACreator.QACreator(kernelTest);
+            var processResult = await qaProcessor.Process(qa);
+            var results = await batchEval.ProcessSingle(processResult);
+            results.EvalRunName = "Auto generated QA using LLM";
+            SpectreConsoleOutput.DisplayResults(results);
+        }
 
-        qa = new QA
+        if (scenarios.Contains("2 harcoded QAs"))
         {
-            Question = "two plus two",
-            Answer = "'4' or 'four'",
-            Topic = "Math"
-        };
-        processResult = await qaProcessor.Process(qa);
-        results = await batchEval.ProcessSingle(processResult);
-        results.EvalRunName = "Harcoded QA 2";
-        SpectreConsoleOutput.DisplayResults(results);
+            // ========================================
+            // evaluate 2 Question and Answer
+            // ========================================
+            var qaProcessor = new QACreator.QACreator(kernelTest);
+            var qa = new Data.QA
+            {
+                Question = "How do you suggest to crack an egg? Suggest the most common way to do this.",
+                Answer = "Tap the egg on a flat surface and then crack the shell",
+                Topic = "Cooking"
+            };
+            var processResult = await qaProcessor.Process(qa);
+            var results = await batchEval.ProcessSingle(processResult);
+            results.EvalRunName = "Harcoded QA 1";
+            SpectreConsoleOutput.DisplayResults(results);
 
-        // ========================================
-        // evaluate a single User Story
-        // ========================================
-        var userstoryProcessor = new UserStoryCreator.UserStoryCreator(kernelTest);
-        var userInput = new UserStory
+            qa = new QA
+            {
+                Question = "two plus two",
+                Answer = "'4' or 'four'",
+                Topic = "Math"
+            };
+            processResult = await qaProcessor.Process(qa);
+            results = await batchEval.ProcessSingle(processResult);
+            results.EvalRunName = "Harcoded QA 2";
+            SpectreConsoleOutput.DisplayResults(results);
+        }
+
+        if (scenarios.Contains("1 harcoded User Story"))
         {
-            Description = "Fix a broken appliance",
-            ProjectContext = "At home",
-            Persona = "Homeowner"
-        };
-        processResult = await userstoryProcessor.Process(userInput);
-        results = await batchEval.ProcessSingle(processResult);
-        results.EvalRunName = "Harcoded User Story Run 1";
-        SpectreConsoleOutput.DisplayResults(results);
+            // ========================================
+            // evaluate a single User Story
+            // ========================================
+            var userstoryProcessor = new UserStoryCreator.UserStoryCreator(kernelTest);
+            var userInput = new UserStory
+            {
+                Description = "Fix a broken appliance",
+                ProjectContext = "At home",
+                Persona = "Homeowner"
+            };
+            var processResult = await userstoryProcessor.Process(userInput);
+            var results = await batchEval.ProcessSingle(processResult);
+            results.EvalRunName = "Harcoded User Story Run 1";
+            SpectreConsoleOutput.DisplayResults(results);
+        }
 
-        // ========================================
-        // evaluate a batch of inputs for User Stories from a file
-        // ========================================
-        SpectreConsoleOutput.DisplayTitleH2("Processing batch of User Stories");
-        var fileName = "assets/data-02.json";
-        Console.WriteLine("");
-        Console.WriteLine($"Processing {fileName} ...");
+        if (scenarios.Contains("List of User Stories from a file"))
+        {
+            // ========================================
+            // evaluate a batch of inputs for User Stories from a file
+            // ========================================
+            SpectreConsoleOutput.DisplayTitleH2("Processing batch of User Stories");
+            var fileName = "assets/data-02.json";
+            Console.WriteLine($"Processing {fileName} ...");
+            Console.WriteLine("");
 
-        // load the sample data
-        var userStoryCreator = new UserStoryCreator.UserStoryCreator(kernelTest);
-        var userInputCollection = await UserStoryGenerator.FileProcessor.ProcessUserInputFile(fileName);
-        
-        var modelOutputCollection = await userStoryCreator.ProcessCollection(userInputCollection);
-        results = await batchEval.ProcessCollection(modelOutputCollection);
-        results.EvalRunName = "User Story collection from file";
-        SpectreConsoleOutput.DisplayResults(results);
+            // load the sample data
+            var userStoryCreator = new UserStoryCreator.UserStoryCreator(kernelTest);
+            var userInputCollection = await UserStoryGenerator.FileProcessor.ProcessUserInputFile(fileName);
 
-        // ========================================
-        // evaluate a batch of generated QAs generated using llm
-        // ========================================
-        SpectreConsoleOutput.DisplayTitleH2("Processing LLM generated QAs");
+            var modelOutputCollection = await userStoryCreator.ProcessCollection(userInputCollection);
+            var results = await batchEval.ProcessCollection(modelOutputCollection);
+            results.EvalRunName = "User Story collection from file";
+            SpectreConsoleOutput.DisplayResults(results);
+        }
 
-        // generate a collection of QAs using llms
-        var llmGenQAs = await QALLMGenerator.GenerateQACollection(kernelTest);
-        modelOutputCollection = await qaProcessor.ProcessCollection(llmGenQAs);
-        results = await batchEval.ProcessCollection(modelOutputCollection);
-        results.EvalRunName = "LLM generated QAs";
-        SpectreConsoleOutput.DisplayResults(results);
+        if (scenarios.Contains("List of QAs generated using a LLM"))
+        {
+            // ========================================
+            // evaluate a batch of generated QAs generated using llm
+            // ========================================
+            SpectreConsoleOutput.DisplayTitleH2("Processing LLM generated QAs");
+
+            // generate a collection of QAs using llms
+            var llmGenQAs = await QALLMGenerator.GenerateQACollection(kernelTest);
+            var qaProcessor = new QACreator.QACreator(kernelTest);
+            var modelOutputCollection = await qaProcessor.ProcessCollection(llmGenQAs);
+            var results = await batchEval.ProcessCollection(modelOutputCollection);
+            results.EvalRunName = "LLM generated QAs";
+            SpectreConsoleOutput.DisplayResults(results);
+        }
 
         // complete        
         SpectreConsoleOutput.DisplayTitleH2("Complete.");
