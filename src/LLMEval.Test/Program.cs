@@ -36,16 +36,16 @@ class Program
 
 
         Console.WriteLine("");
-        SpectreConsoleOutput.DisplayTitleH2($"Processing single items: 2 QAs and 1 User Story");
+        SpectreConsoleOutput.DisplayTitleH2($"Processing single items: 1 LLM generated QA, 2 QAs and 1 User Story");
 
         // ========================================
         // evaluate a random generated Question and Answer
         // ========================================
-        var qaProcessor = new QACreator.QACreator(kernelTest);
         var qa = await QALLMGenerator.GenerateQAusingLLM(kernelTest);
+        var qaProcessor = new QACreator.QACreator(kernelTest);
         var processResult = await qaProcessor.Process(qa);
         var results = await batchEval.ProcessSingle(processResult);
-        results.EvalRunName = "QA Run 1";
+        results.EvalRunName = "Auto generated QA using LLM";
         SpectreConsoleOutput.DisplayResults(results);
 
         // ========================================

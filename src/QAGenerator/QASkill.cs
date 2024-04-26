@@ -23,7 +23,7 @@ public class QASkill
         _kernel = kernel;
     }
 
-    public async Task<QA?> GetQA(string question, string answer)
+    public async Task<QA?> GetQA(string question, string answer, string topic)
     {
         var context = new KernelArguments
         {

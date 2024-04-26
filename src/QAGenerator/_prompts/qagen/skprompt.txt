@@ -17,9 +17,9 @@ Otherwise, choose a random topic from the following list:
 - Sports
 [End Topic List]
 
-Return the results in json format with the fields question and answer. 
+Return the results in json format with the fields question, answer and topic. 
 All these fields in the json object are of type string. 
 Do not return anything besides the json, no comments, no format, no markdown, just the json object. 
 The JSON must be a valid JSON format.
 For example:
-{ question: "2 + 2", answer: "4" }
+{ question: "2 + 2", answer: "4", topic: "Math" }
