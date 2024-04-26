@@ -1,0 +1,9 @@
+Answer the question based on below context:
+
+[Question]
+{{$question}}
+[End Question]
+
+Return the results in json format with the field answer. All these fields in the json object are of type string. Do not return anything besides the json, no comments, no format, no markdown, just the json object. For example:
+
+{ , answer: "4" }

@@ -3,7 +3,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace UserStoryGenerator;
+namespace QAGenerator;
 
 internal static class EmbeddedResource
 {

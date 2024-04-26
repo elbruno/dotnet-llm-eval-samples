@@ -1,6 +1,7 @@
 using UserStoryGenerator;
 using BatchEval.Core;
 using Microsoft.SemanticKernel;
+using BatchEval.Data;
 
 namespace UserStoryCreator;
 
@@ -13,7 +14,18 @@ public class UserStoryCreator : IInputProcessor
         userStoryGenerator = UserStorySkill.Create(kernel);
     }
 
-    public async Task<ModelOutput> Process(BatchEval.Data.UserInput userInput)
+    public async Task<List<ModelOutput>> ProcessUserInputCollection(List<UserInput> userInputs)
+    { 
+        var result = new List<ModelOutput>();        
+        foreach (var userInput in userInputs)
+        {
+            var modelOutput = await ProcessUserInput(userInput);
+            result.Add(modelOutput);
+        }
+        return result;
+    }
+
+    public async Task<ModelOutput> ProcessUserInput(UserInput userInput)
     {
         var userStory = await userStoryGenerator.GetUserStory(
             userInput.Description,
@@ -24,5 +36,10 @@ public class UserStoryCreator : IInputProcessor
             Input = $"Generate a user story for {userInput.Persona} so it can {userInput.Description}",
             Output = $"{userStory!.Title} - {userStory!.Description}"
         };
+    }
+
+    public Task<ModelOutput> ProcessQA(QA qa)
+    {
+        throw new NotImplementedException();
     }
 }
