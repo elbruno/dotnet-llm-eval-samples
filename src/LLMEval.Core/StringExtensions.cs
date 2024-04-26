@@ -3,7 +3,7 @@
 
 using System.Text.Json;
 
-namespace BatchEval.Core;
+namespace LLMEval.Core;
 
 public static class StringExtensions
 {

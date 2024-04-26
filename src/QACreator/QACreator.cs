@@ -1,5 +1,5 @@
-using BatchEval.Core;
-using BatchEval.Data;
+using LLMEval.Core;
+using LLMEval.Data;
 using Microsoft.SemanticKernel;
 using QAGenerator;
 
@@ -14,7 +14,7 @@ public class QACreator : IInputProcessor
         qaGenerator = QASkill.Create(kernel);
     }
 
-    public async Task<ModelOutput> ProcessQA(BatchEval.Data.QA sourceQA)
+    public async Task<ModelOutput> ProcessQA(LLMEval.Data.QA sourceQA)
     {
         var modelResponse = await qaGenerator.GetQA(sourceQA.Question, sourceQA.Answer);
     
@@ -25,7 +25,7 @@ public class QACreator : IInputProcessor
         };
     }
 
-    public Task<ModelOutput> ProcessUserInput(UserInput userInput)
+    public Task<ModelOutput> ProcessUserInput(LLMEval.Data.UserInput userInput)
     {
         throw new NotImplementedException();
     }

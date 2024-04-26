@@ -1,4 +1,4 @@
-﻿namespace BatchEval.Data
+﻿namespace LLMEval.Data
 {
     public class BaseItem
     {

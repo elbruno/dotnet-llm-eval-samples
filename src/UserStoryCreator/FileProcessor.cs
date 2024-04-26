@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using BatchEval.Data;
+using LLMEval.Data;
 
 namespace UserStoryGenerator;
 

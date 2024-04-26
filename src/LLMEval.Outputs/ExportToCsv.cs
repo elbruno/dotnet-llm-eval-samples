@@ -1,7 +1,7 @@
-﻿using BatchEval.Core;
+﻿using LLMEval.Core;
 using Csv;
 
-namespace BatchEval.Outputs;
+namespace LLMEval.Outputs;
 
 public static class ExportToCsv
 {

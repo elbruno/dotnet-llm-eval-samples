@@ -1,7 +1,7 @@
 using UserStoryGenerator;
-using BatchEval.Core;
+using LLMEval.Core;
 using Microsoft.SemanticKernel;
-using BatchEval.Data;
+using LLMEval.Data;
 
 namespace UserStoryCreator;
 

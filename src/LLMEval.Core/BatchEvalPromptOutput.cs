@@ -1,4 +1,4 @@
-namespace BatchEval.Core;
+namespace LLMEval.Core;
 
 public class BatchEvalPromptOutput
 {

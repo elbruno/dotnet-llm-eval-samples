@@ -1,6 +1,6 @@
-using BatchEval.Data;
+using LLMEval.Data;
 
-namespace BatchEval.Core;
+namespace LLMEval.Core;
 
 public interface IInputProcessor
 {

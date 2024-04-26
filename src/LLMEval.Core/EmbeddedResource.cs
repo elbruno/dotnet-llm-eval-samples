@@ -3,7 +3,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace BatchEval.Core;
+namespace LLMEval.Core;
 
 internal static class EmbeddedResource
 {

@@ -1,6 +1,6 @@
 using Microsoft.SemanticKernel;
 
-namespace BatchEval.Core;
+namespace LLMEval.Core;
 
 public class GroundednessEval : PromptScoreEval
 {

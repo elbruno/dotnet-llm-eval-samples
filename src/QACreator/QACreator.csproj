@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BatchEval.Core\BatchEval.Core.csproj" />
-    <ProjectReference Include="..\BatchEval.Data\BatchEval.Data.csproj" />
+    <ProjectReference Include="..\LLMEval.Core\LLMEval.Core.csproj" />
+    <ProjectReference Include="..\LLMEval.Data\LLMEval.Data.csproj" />
     <ProjectReference Include="..\QAGenerator\QAGenerator.csproj" />
   </ItemGroup>
 

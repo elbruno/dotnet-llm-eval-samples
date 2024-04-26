@@ -3,7 +3,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using System.Diagnostics.Metrics;
 
-namespace BatchEval.Core;
+namespace LLMEval.Core;
 
 public class EvalMetrics
 {

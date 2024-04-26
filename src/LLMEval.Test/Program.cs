@@ -2,17 +2,13 @@
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
-using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
-using System.Diagnostics.Metrics;
-using System.Text;
-using BatchEval.Core;
-using BatchEval.Test;
-using BatchEval.Data;
-using System.Threading;
+using LLMEval.Core;
+using LLMEval.Data;
+using LLMEval.Output;
 
-namespace BatchEval;
+namespace LLMEval;
 
 class Program
 {
@@ -54,7 +50,7 @@ class Program
 
         // create batcheval and add evaluators
         var kernelEvalFunctions = kernelEval.CreatePluginFromPromptDirectory("Prompts");
-        var batchEval = new BatchEval.Core.BatchEval();
+        var batchEval = new BatchEval();
 
         batchEval
             .AddEvaluator(new PromptScoreEval("coherence", kernelEval, kernelEvalFunctions["coherence"]))

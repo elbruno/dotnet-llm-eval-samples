@@ -1,4 +1,4 @@
-namespace BatchEval.Core;
+namespace LLMEval.Core;
 
 public interface IEvaluator<T>
 {
