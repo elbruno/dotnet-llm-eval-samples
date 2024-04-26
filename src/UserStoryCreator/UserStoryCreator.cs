@@ -14,10 +14,10 @@ public class UserStoryCreator : IInputProcessor
         userStoryGenerator = UserStorySkill.Create(kernel);
     }
 
-    public async Task<List<ModelOutput>> ProcessUserInputCollection(List<UserInput> userInputs)
-    { 
+    public async Task<List<ModelOutput>> ProcessCollection<T>(T collection)
+    {
         var result = new List<ModelOutput>();        
-        foreach (var userInput in userInputs)
+        foreach (var userInput in collection as List<UserInput>)
         {
             var modelOutput = await Process(userInput);
             result.Add(modelOutput);

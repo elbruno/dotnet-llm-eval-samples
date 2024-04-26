@@ -16,9 +16,10 @@ public class LLMEval
 
     public string? OtlpEndpoint { get; set; } = default!;
     public string meterId { get; set; }
-    public Meter meter { get; set; }
+    private Meter meter { get; set; }
     
     public List<ModelOutput> collectionModelOutputs { get; set; }
+    public string evalRunName { get; set; }
 
     public LLMEval ShowConsoleOutput(bool showConsoleOutput)
     {
@@ -44,6 +45,12 @@ public class LLMEval
         return this;
     }
 
+    public LLMEval SetEvalRunName(string evalRunName="")
+    {
+        this.evalRunName= evalRunName;
+        return this;
+    }
+
     public async Task<LLMEvalResults> Run()
     {
         return await ProcessCollection(collectionModelOutputs);
@@ -56,7 +63,7 @@ public class LLMEval
         return this;
     }
 
-    private async Task<LLMEvalResults> ProcessCollection(List<ModelOutput> collectionModelOutpus)
+    public async Task<LLMEvalResults> ProcessCollection(List<ModelOutput> collectionModelOutpus)
     {
         var results = new LLMEvalResults();
 
@@ -129,6 +136,7 @@ public class LLMEval
             Console.WriteLine();
         }
 
+        results.EvalRunName = evalRunName;
         return results;
     }
 
@@ -146,7 +154,8 @@ public class LLMEval
 
         if (string.IsNullOrEmpty(OtlpEndpoint))
         {
-            builder.AddConsoleExporter();
+            if(showConsoleOutput)
+                builder.AddConsoleExporter();
         }
         else
         {

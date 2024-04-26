@@ -11,8 +11,6 @@ public class UserStorySkill
 
     public static UserStorySkill Create(Kernel kernel)
     {
-        //string promptConfigString = EmbeddedResource.Read("_prompts.userstoryclassic.config.json")!;
-        //var promptConfig = PromptTemplateConfig.FromJson(promptConfigString);
 
         string promptTemplate = EmbeddedResource.Read("_prompts.userstoryclassic.skprompt.txt")!;
 
@@ -35,11 +33,21 @@ public class UserStorySkill
         };
 
         var result = await _createUserStoryFunction.InvokeAsync(_kernel, context);
-        
-        var userStory = JsonSerializer.Deserialize<UserStory>(result.ToString(), new JsonSerializerOptions
+        var resultString = result.ToString();
+
+        var userStory = new UserStory();
+        try
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        });
+            userStory = JsonSerializer.Deserialize<UserStory>(resultString, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+        }
+        catch (JsonException jsonExc)
+        {
+            userStory.Title = "An error occurred while generating the user story. Error descripton";
+            userStory.Description = jsonExc.Message.ToString();
+        }
 
         return userStory;
     }

@@ -46,6 +46,8 @@ Create user story based on below context topic:
 {{$ContextTopic}}
 [End]
 
-Return the results in json format with the fields title, description and acceptanceCriteria. All these fields in the json object are of type string. Do not return anything besides the json, no comments, no format, no markdown, just the json object. For example:
+Return the results in json format with the fields title, description and acceptanceCriteria. All these fields in the json object are of type string. Do not return anything besides the json, no comments, no format, no markdown, just the json object. 
+The JSON must be a valid JSON format.
+For example:
 
 { title: "My summarized title", description: "As a <persona>, I want to ...", acceptanceCriteria: "1. ..." }

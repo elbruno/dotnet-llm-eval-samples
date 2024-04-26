@@ -6,11 +6,24 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.TextGeneration;
 using Spectre.Console;
+using Spectre.Console.Rendering;
 
 namespace LLMEval.Output;
 
 public static class SpectreConsoleOutput
 {
+    public static void DisplayTitle(string title = "LLM Eval Results")
+    {
+        AnsiConsole.Write(new FigletText(title).Centered().Color(Color.Purple));
+    }
+
+    public static void DisplaySubTitle(string subtitle)
+    {
+        // add a header using === before the subtitle
+        AnsiConsole.MarkupLine($"[bold]=== {subtitle} ===[/]");
+        AnsiConsole.MarkupLine($"[bold][/]");        
+    }
+
     public static void DisplayKernels(Kernel testKernel, Kernel evalKernel)
     {
         // Create a table
@@ -21,8 +34,8 @@ public static class SpectreConsoleOutput
         table.AddColumn("service");
         table.AddColumn("Key - Value");
 
-        DisplayKernelInfo(testKernel, "test", table);
-        DisplayKernelInfo(evalKernel, "eval", table);
+        DisplayKernelInfo(testKernel, "Test", table);
+        DisplayKernelInfo(evalKernel, "Eval", table);
 
         // Render the table to the console
         AnsiConsole.Write(table);
@@ -51,10 +64,7 @@ public static class SpectreConsoleOutput
     {
         foreach (var atr in services)
         {
-            List<string> row = new List<string>();
-            row.Add(kernelName);
-            row.Add(serviceName);
-            row.Add($"{atr.Key} - {atr.Value}");
+            List<Renderable> row = [new Markup($"[bold]= {kernelName} =[/]"), new Text(serviceName), new Text($"{atr.Key} - {atr.Value}")];
             table.AddRow(row.ToArray());
         }
     }
@@ -74,16 +84,16 @@ public static class SpectreConsoleOutput
         }
         table.Columns[0].PadLeft(1).PadRight(1);
         table.Columns[1].PadLeft(1).PadRight(1);
-
-        // rows 
+                
         foreach (var result in results.EvalResults)
         {
-            List<string> row = new List<string>();
-            row.Add(result.Subject.Input);
-            row.Add(result.Subject.Output);
+            List<Renderable> row = [
+                new Text(result.Subject.Input), 
+                new Text(result.Subject.Output)];
+            
+            // add the evaluation results
             foreach (var value in result.Results.Values)
             {
-
                 var intValue = (int)value;
                 string color = "white";
                 if (intValue <= 1)
@@ -92,14 +102,13 @@ public static class SpectreConsoleOutput
                     color = "yellow";
                 else if (intValue <= 5)
                     color = "green";
-                                    
-                row.Add($"[{color}]{value?.ToString() ?? string.Empty}[/]");
-            }
 
+                row.Add(new Markup($"[{color}]{value?.ToString() ?? string.Empty}[/]"));
+            }
             table.AddRow(row.ToArray());
         }
 
-        // Render the table to the console
+        //Render the table to the console
         AnsiConsole.Write(table);
     }
 }

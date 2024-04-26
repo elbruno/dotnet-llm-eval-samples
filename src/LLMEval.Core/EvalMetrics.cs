@@ -1,6 +1,3 @@
-using OpenTelemetry;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Trace;
 using System.Diagnostics.Metrics;
 
 namespace LLMEval.Core;

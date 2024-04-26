@@ -10,7 +10,7 @@ internal static class KernelFactory
     {
         var builder = Kernel.CreateBuilder();
         builder.AddOpenAIChatCompletion(
-            modelId: "phi3",
+            modelId: "llama3",
             endpoint: new Uri("http://localhost:11434"),
             apiKey: "api");
 

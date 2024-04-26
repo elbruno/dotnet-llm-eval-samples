@@ -10,15 +10,20 @@ class Program
 {
     static async Task Main()
     {
-        Console.WriteLine($"Creating kernels ...");
+        SpectreConsoleOutput.DisplayTitle();
 
+
+        // ========================================
         // create kernels
+        // ========================================
+        SpectreConsoleOutput.DisplaySubTitle($"LLM Kernels");
         var kernelEval = KernelFactory.CreateAndConfigureKernelEval();
         var kernelTest = KernelFactory.CreateAndConfigureKernelTest();
-
         SpectreConsoleOutput.DisplayKernels(kernelTest, kernelEval);
 
-        // create batcheval and add evaluators
+        // ========================================
+        // create LLMEval and add evaluators
+        // ========================================
         var kernelEvalFunctions = kernelEval.CreatePluginFromPromptDirectory("Prompts");
         var batchEval = new Core.LLMEval();
 
@@ -31,9 +36,11 @@ class Program
 
 
         Console.WriteLine("");
-        Console.WriteLine($"Processing single QAs ...");
+        SpectreConsoleOutput.DisplaySubTitle($"Processing single items: QA and User Story");
 
-        // evaluate a single qa
+        // ========================================
+        // evaluate a single Question and Answer
+        // ========================================
         var qaProcessor = new QACreator.QACreator(kernelTest);
         var qa = new QA
         {
@@ -41,10 +48,13 @@ class Program
             Answer = "Tap the egg on a flat surface and then crack the shell"
         };
         var processResult = await qaProcessor.Process(qa);
-        var resultsSingle = await batchEval.ProcessSingle(processResult);
-        SpectreConsoleOutput.DisplayResults(resultsSingle);
+        var results = await batchEval.ProcessSingle(processResult);
+        results.EvalRunName = "QA Run 1";
+        SpectreConsoleOutput.DisplayResults(results);
 
-        // evaluate a single user story
+        // ========================================
+        // evaluate a single User Story
+        // ========================================
         var userstoryProcessor = new UserStoryCreator.UserStoryCreator(kernelTest);
         var userInput = new UserInput
         {
@@ -53,35 +63,27 @@ class Program
             Persona = "Homeowner"
         };
         processResult = await userstoryProcessor.Process(userInput);
-        resultsSingle = await batchEval.ProcessSingle(processResult);
-        SpectreConsoleOutput.DisplayResults(resultsSingle);
+        results = await batchEval.ProcessSingle(processResult);
+        SpectreConsoleOutput.DisplayResults(results);
 
-        //// evaluate a batch of inputs for User Stories
-        //var fileName = "assets/data-02.json";
-        //Console.WriteLine("");
-        //Console.WriteLine($"Processing batch of user stories inputs ...");
-        //Console.WriteLine($"Processing {fileName} ...");
+        // ========================================
+        // evaluate a batch of inputs for User Stories from a file
+        // ========================================
+        SpectreConsoleOutput.DisplaySubTitle("Processing batch of User Stories");
+        var fileName = "assets/data-02.json";
+        Console.WriteLine("");
+        Console.WriteLine($"Processing {fileName} ...");
 
-        //// load the sample data
-        //var sampleUserStoryCollection = await UserStoryGenerator.FileProcessor.ProcessUserInputFile(fileName);
-        //var userStoryCreator = new UserStoryCreator.UserStoryCreator(kernelTest);
+        // load the sample data
+        var userStoryCreator = new UserStoryCreator.UserStoryCreator(kernelTest);
+        var userInputCollection = await UserStoryGenerator.FileProcessor.ProcessUserInputFile(fileName);
+        
+        var modelOutputCollection = await userStoryCreator.ProcessCollection(userInputCollection);
+        results = await batchEval.ProcessCollection(modelOutputCollection);
+        SpectreConsoleOutput.DisplayResults(results);
 
-        //processResult = await userstoryProcessor.
-        //resultsSingle = await batchEval.ProcessSingle(processResult);
-        //SpectreConsoleOutput.DisplayResults(resultsSingle);
-
-
-        //LLMEvalResults results = await batchEval
-        //    .AddModelOutputsCollection(sampleUserStoryCollection)
-        //    .Run();
-
-        //SpectreConsoleOutput.DisplayResults(results);
-
-        //// export results to csv
-        //Outputs.ExportToCsv.WriteCsv(results, "output.csv");
-
-
-        Console.WriteLine($"Complete.");
+        // complete
+        SpectreConsoleOutput.DisplaySubTitle("Complete.");
         
     }
 }

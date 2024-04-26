@@ -14,6 +14,17 @@ public class QACreator : IInputProcessor
         qaGenerator = QASkill.Create(kernel);
     }
 
+    public async Task<List<ModelOutput>> ProcessCollection<T>(T collection)
+    {
+        var result = new List<ModelOutput>();
+        foreach (var qa in collection as List<LLMEval.Data.QA>)
+        {
+            var modelOutput = await Process(qa);
+            result.Add(modelOutput);
+        }
+        return result;
+    }
+
     public async Task<ModelOutput> Process<T>(T source)
     {
         var qa = source as LLMEval.Data.QA;
