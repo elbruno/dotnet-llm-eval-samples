@@ -41,7 +41,7 @@ class Program
         // ========================================
         // evaluate a random generated Question and Answer
         // ========================================
-        var qa = await QALLMGenerator.GenerateQAusingLLM(kernelTest);
+        var qa = await QALLMGenerator.GenerateQA(kernelTest);
         var qaProcessor = new QACreator.QACreator(kernelTest);
         var processResult = await qaProcessor.Process(qa);
         var results = await batchEval.ProcessSingle(processResult);
@@ -55,21 +55,23 @@ class Program
         qa = new Data.QA
         {
             Question = "How do you suggest to crack an egg? Suggest the most common way to do this.",
-            Answer = "Tap the egg on a flat surface and then crack the shell"
+            Answer = "Tap the egg on a flat surface and then crack the shell",
+            Topic = "Cooking"
         };
         processResult = await qaProcessor.Process(qa);
         results = await batchEval.ProcessSingle(processResult);
-        results.EvalRunName = "QA Run 1";
+        results.EvalRunName = "Harcoded QA 1";
         SpectreConsoleOutput.DisplayResults(results);
 
         qa = new QA
         {
             Question = "two plus two",
-            Answer = "'4' or 'four'"
+            Answer = "'4' or 'four'",
+            Topic = "Math"
         };
         processResult = await qaProcessor.Process(qa);
         results = await batchEval.ProcessSingle(processResult);
-        results.EvalRunName = "QA Run 2";
+        results.EvalRunName = "Harcoded QA 2";
         SpectreConsoleOutput.DisplayResults(results);
 
         // ========================================
@@ -84,7 +86,7 @@ class Program
         };
         processResult = await userstoryProcessor.Process(userInput);
         results = await batchEval.ProcessSingle(processResult);
-        results.EvalRunName = "User Story Run 1";
+        results.EvalRunName = "Harcoded User Story Run 1";
         SpectreConsoleOutput.DisplayResults(results);
 
         // ========================================
@@ -102,6 +104,18 @@ class Program
         var modelOutputCollection = await userStoryCreator.ProcessCollection(userInputCollection);
         results = await batchEval.ProcessCollection(modelOutputCollection);
         results.EvalRunName = "User Story collection from file";
+        SpectreConsoleOutput.DisplayResults(results);
+
+        // ========================================
+        // evaluate a batch of generated QAs generated using llm
+        // ========================================
+        SpectreConsoleOutput.DisplayTitleH2("Processing LLM generated QAs");
+
+        // generate a collection of QAs using llms
+        var llmGenQAs = await QALLMGenerator.GenerateQACollection(kernelTest);
+        modelOutputCollection = await qaProcessor.ProcessCollection(llmGenQAs);
+        results = await batchEval.ProcessCollection(modelOutputCollection);
+        results.EvalRunName = "LLM generated QAs";
         SpectreConsoleOutput.DisplayResults(results);
 
         // complete        
