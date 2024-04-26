@@ -19,14 +19,16 @@ public class UserStoryCreator : IInputProcessor
         var result = new List<ModelOutput>();        
         foreach (var userInput in userInputs)
         {
-            var modelOutput = await ProcessUserInput(userInput);
+            var modelOutput = await Process(userInput);
             result.Add(modelOutput);
         }
         return result;
     }
 
-    public async Task<ModelOutput> ProcessUserInput(UserInput userInput)
+    public async Task<ModelOutput> Process<T>(T source)
     {
+        var userInput = source as UserInput;
+
         var userStory = await userStoryGenerator.GetUserStory(
             userInput.Description,
             userInput.ProjectContext,
@@ -36,10 +38,5 @@ public class UserStoryCreator : IInputProcessor
             Input = $"Generate a user story for {userInput.Persona} so it can {userInput.Description}",
             Output = $"{userStory!.Title} - {userStory!.Description}"
         };
-    }
-
-    public Task<ModelOutput> ProcessQA(QA qa)
-    {
-        throw new NotImplementedException();
     }
 }

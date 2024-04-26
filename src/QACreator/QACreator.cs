@@ -14,19 +14,16 @@ public class QACreator : IInputProcessor
         qaGenerator = QASkill.Create(kernel);
     }
 
-    public async Task<ModelOutput> ProcessQA(LLMEval.Data.QA sourceQA)
+    public async Task<ModelOutput> Process<T>(T source)
     {
-        var modelResponse = await qaGenerator.GetQA(sourceQA.Question, sourceQA.Answer);
+        var qa = source as LLMEval.Data.QA;
+
+        var modelResponse = await qaGenerator.GetQA(qa.Question, qa.Answer);
     
         return new ModelOutput()
         {
-            Input = $@"The model was asked this question: ""{sourceQA.Question}"", expecting this answer: ""{sourceQA.Answer}""",
+            Input = $@"The model was asked this question: ""{qa.Question}"", expecting this answer: ""{qa.Answer}""",
             Output = $@"The model answer is: ""{modelResponse.Answer}"""
         };
-    }
-
-    public Task<ModelOutput> ProcessUserInput(LLMEval.Data.UserInput userInput)
-    {
-        throw new NotImplementedException();
     }
 }

@@ -70,7 +70,7 @@ class Program
             Question = "How do you suggest to crack an egg? Suggest the most common way to do this.",
             Answer = "Tap the egg on a flat surface and then crack the shell"
         };
-        var processResult = await qaProcessor.ProcessQA(qa);
+        var processResult = await qaProcessor.Process(qa);
         var resultsSingle = await batchEval.ProcessSingle(processResult);
         SpectreConsoleOutput.DisplayResults(resultsSingle);
 
@@ -82,7 +82,7 @@ class Program
             ProjectContext = "At home",
             Persona = "Homeowner"
         };
-        processResult = await userstoryProcessor.ProcessUserInput(userInput);
+        processResult = await userstoryProcessor.Process(userInput);
         resultsSingle = await batchEval.ProcessSingle(processResult);
         SpectreConsoleOutput.DisplayResults(resultsSingle);
 
