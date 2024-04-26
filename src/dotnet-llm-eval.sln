@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{99214912-11D2-4D2B-9C27-D2E2AC307EE9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "User Story", "User Story", "{4885840A-33CC-4C16-8206-08153B814FBF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content Creators and Generators", "Content Creators and Generators", "{4885840A-33CC-4C16-8206-08153B814FBF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QACreator", "QACreator\QACreator.csproj", "{9174EB66-84B7-4E78-9147-9BC88F626D8F}"
 EndProject

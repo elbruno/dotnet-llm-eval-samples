@@ -6,7 +6,7 @@ using System.Diagnostics.Metrics;
 
 namespace LLMEval.Core;
 
-public class BatchEval
+public class LLMEval
 {
     IList<IEvaluator<int>> intEvaluators = new List<IEvaluator<int>>();
 
@@ -20,45 +20,45 @@ public class BatchEval
     
     public List<ModelOutput> collectionModelOutputs { get; set; }
 
-    public BatchEval ShowConsoleOutput(bool showConsoleOutput)
+    public LLMEval ShowConsoleOutput(bool showConsoleOutput)
     {
         this.showConsoleOutput = showConsoleOutput;
         return this;
     }
 
-    public BatchEval AddEvaluator(IEvaluator<int> evaluator)
+    public LLMEval AddEvaluator(IEvaluator<int> evaluator)
     {
         intEvaluators.Add(evaluator);
         return this;
     }
 
-    public BatchEval AddEvaluator(IEvaluator<bool> evaluator)
+    public LLMEval AddEvaluator(IEvaluator<bool> evaluator)
     {
         boolEvaluators.Add(evaluator);
         return this;
     }
     
-    public BatchEval AddModelOutputsCollection(List<ModelOutput> collectionModelOutputs)
+    public LLMEval AddModelOutputsCollection(List<ModelOutput> collectionModelOutputs)
     {
         this.collectionModelOutputs = collectionModelOutputs;
         return this;
     }
 
-    public async Task<BatchEvalResults> Run()
+    public async Task<LLMEvalResults> Run()
     {
         return await ProcessCollection(collectionModelOutputs);
     }
 
-    public BatchEval SetMeterId(string meterId)
+    public LLMEval SetMeterId(string meterId)
     {
         this.meterId = meterId;        
         meter = CreateMeter(meterId);        
         return this;
     }
 
-    private async Task<BatchEvalResults> ProcessCollection(List<ModelOutput> collectionModelOutpus)
+    private async Task<LLMEvalResults> ProcessCollection(List<ModelOutput> collectionModelOutpus)
     {
-        var results = new BatchEvalResults();
+        var results = new LLMEvalResults();
 
         foreach (var item in collectionModelOutpus)
         {
@@ -72,12 +72,12 @@ public class BatchEval
         return results;
     }
 
-    public async Task<BatchEvalResults> ProcessSingle(ModelOutput modelOutput)
+    public async Task<LLMEvalResults> ProcessSingle(ModelOutput modelOutput)
     {
         var evalMetrics = InitCounters();
-        var results = new BatchEvalResults();      
+        var results = new LLMEvalResults();      
 
-        var evalOutput = new BatchEvalPromptOutput()
+        var evalOutput = new LLMEvalPromptOutput()
         {
             Subject = modelOutput
         };

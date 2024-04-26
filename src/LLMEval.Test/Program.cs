@@ -50,7 +50,7 @@ class Program
 
         // create batcheval and add evaluators
         var kernelEvalFunctions = kernelEval.CreatePluginFromPromptDirectory("Prompts");
-        var batchEval = new BatchEval();
+        var batchEval = new Core.LLMEval();
 
         batchEval
             .AddEvaluator(new PromptScoreEval("coherence", kernelEval, kernelEvalFunctions["coherence"]))
@@ -86,29 +86,29 @@ class Program
         resultsSingle = await batchEval.ProcessSingle(processResult);
         SpectreConsoleOutput.DisplayResults(resultsSingle);
 
-        // evaluate a batch of inputs for User Stories
-        var fileName = "assets/data-02.json";
-        Console.WriteLine("");
-        Console.WriteLine($"Processing batch of user stories inputs ...");
-        Console.WriteLine($"Processing {fileName} ...");
+        //// evaluate a batch of inputs for User Stories
+        //var fileName = "assets/data-02.json";
+        //Console.WriteLine("");
+        //Console.WriteLine($"Processing batch of user stories inputs ...");
+        //Console.WriteLine($"Processing {fileName} ...");
 
-        // load the sample data
-        var sampleUserStoryCollection = await UserStoryGenerator.FileProcessor.ProcessUserInputFile(fileName);
-        var userStoryCreator = new UserStoryCreator.UserStoryCreator(kernelTest);
+        //// load the sample data
+        //var sampleUserStoryCollection = await UserStoryGenerator.FileProcessor.ProcessUserInputFile(fileName);
+        //var userStoryCreator = new UserStoryCreator.UserStoryCreator(kernelTest);
 
-        processResult = await userstoryProcessor.
-        resultsSingle = await batchEval.ProcessSingle(processResult);
-        SpectreConsoleOutput.DisplayResults(resultsSingle);
+        //processResult = await userstoryProcessor.
+        //resultsSingle = await batchEval.ProcessSingle(processResult);
+        //SpectreConsoleOutput.DisplayResults(resultsSingle);
 
 
-        BatchEvalResults results = await batchEval
-            .AddModelOutputsCollection(sampleUserStoryCollection)
-            .Run();
+        //LLMEvalResults results = await batchEval
+        //    .AddModelOutputsCollection(sampleUserStoryCollection)
+        //    .Run();
 
-        SpectreConsoleOutput.DisplayResults(results);
+        //SpectreConsoleOutput.DisplayResults(results);
 
-        // export results to csv
-        Outputs.ExportToCsv.WriteCsv(results, "output.csv");
+        //// export results to csv
+        //Outputs.ExportToCsv.WriteCsv(results, "output.csv");
 
 
         Console.WriteLine($"Complete.");

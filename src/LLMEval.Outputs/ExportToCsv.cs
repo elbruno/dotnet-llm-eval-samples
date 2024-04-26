@@ -5,13 +5,13 @@ namespace LLMEval.Outputs;
 
 public static class ExportToCsv
 {
-    public static void WriteCsv(BatchEvalResults results, string fileLocation)
+    public static void WriteCsv(LLMEvalResults results, string fileLocation)
     {
         var csv = CreateCsv(results);
         File.WriteAllText(fileLocation, csv);
     }
 
-    public static string CreateCsv(BatchEvalResults results)
+    public static string CreateCsv(LLMEvalResults results)
     {
         // headers
         var columnNames = new List<string> { "Input", "Output" };

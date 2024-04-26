@@ -1,6 +1,6 @@
 namespace LLMEval.Core;
 
-public class BatchEvalPromptOutput
+public class LLMEvalPromptOutput
 {
     public ModelOutput Subject { get; set; } = default!;
 

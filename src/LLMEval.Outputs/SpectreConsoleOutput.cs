@@ -59,7 +59,7 @@ public static class SpectreConsoleOutput
         }
     }
 
-    public static void DisplayResults(BatchEvalResults results)
+    public static void DisplayResults(LLMEvalResults results)
     {
         // Create a table
         var table = new Table();
