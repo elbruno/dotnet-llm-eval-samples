@@ -78,7 +78,7 @@ class Program
         // evaluate a single User Story
         // ========================================
         var userstoryProcessor = new UserStoryCreator.UserStoryCreator(kernelTest);
-        var userInput = new UserInput
+        var userInput = new UserStory
         {
             Description = "Fix a broken appliance",
             ProjectContext = "At home",

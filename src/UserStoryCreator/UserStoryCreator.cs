@@ -17,7 +17,7 @@ public class UserStoryCreator : IInputProcessor
     public async Task<List<ModelOutput>> ProcessCollection<T>(T collection)
     {
         var result = new List<ModelOutput>();        
-        foreach (var userInput in collection as List<UserInput>)
+        foreach (var userInput in collection as List<UserStory>)
         {
             var modelOutput = await Process(userInput);
             result.Add(modelOutput);
@@ -27,7 +27,7 @@ public class UserStoryCreator : IInputProcessor
 
     public async Task<ModelOutput> Process<T>(T source)
     {
-        var userInput = source as UserInput;
+        var userInput = source as UserStory;
 
         var userStory = await userStoryGenerator.GetUserStory(
             userInput.Description,
@@ -35,8 +35,8 @@ public class UserStoryCreator : IInputProcessor
             userInput.Persona);
 
         return new ModelOutput() {
-            Input = $"Generate a user story for {userInput.Persona} so it can {userInput.Description}",
-            Output = $"{userStory!.Title} - {userStory!.Description}"
+            Input = @$"Generate a user story for persona: ""{userInput.Persona}"" so it can ""{userInput.Description}""",
+            Output = $"{userStory!.Persona} - {userStory!.Description}"
         };
     }
 }

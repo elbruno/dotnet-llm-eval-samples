@@ -5,9 +5,9 @@ namespace UserStoryGenerator;
 
 public static class FileProcessor
 {
-    public static async Task<List<UserInput>> ProcessUserInputFile(string fileName)
+    public static async Task<List<UserStory>> ProcessUserInputFile(string fileName)
     {       
-        var results = new List<UserInput>();
+        var results = new List<UserStory>();
 
         const int BufferSize = 128;
         using (var fileStream = File.OpenRead(fileName!))
@@ -16,7 +16,7 @@ public static class FileProcessor
             string? line;
             while ((line = await streamReader.ReadLineAsync()) != null)
             {
-                var userInput = System.Text.Json.JsonSerializer.Deserialize<UserInput>(line);
+                var userInput = System.Text.Json.JsonSerializer.Deserialize<UserStory>(line);
                 results.Add(userInput);
             }
         }

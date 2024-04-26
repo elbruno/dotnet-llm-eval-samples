@@ -1,4 +1,5 @@
-﻿using Microsoft.SemanticKernel;
+﻿using LLMEval.Data;
+using Microsoft.SemanticKernel;
 using System.Text.Json;
 
 namespace UserStoryGenerator;
@@ -23,7 +24,7 @@ public class UserStorySkill
         _kernel = kernel;
     }
 
-    public async Task<UserStory?> GetUserStory(string description, string? projectContext = null, string? personaName = null)
+    public async Task<UserStory> GetUserStory(string description, string? projectContext = null, string? personaName = null)
     {
         var context = new KernelArguments
         {
@@ -45,7 +46,7 @@ public class UserStorySkill
         }
         catch (JsonException jsonExc)
         {
-            userStory.Title = "An error occurred while generating the user story. Error descripton";
+            userStory.Persona = "An error occurred while generating the user story. Error descripton";
             userStory.Description = jsonExc.Message.ToString();
         }
 

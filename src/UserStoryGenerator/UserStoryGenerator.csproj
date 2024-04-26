@@ -23,5 +23,9 @@
     <EmbeddedResource Include="_prompts/userstoryclassic/config.json" />
     <EmbeddedResource Include="_prompts/userstoryclassic/skprompt.txt" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\LLMEval.Data\LLMEval.Data.csproj" />
+  </ItemGroup>
 
 </Project>
