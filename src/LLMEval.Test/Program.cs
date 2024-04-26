@@ -32,11 +32,11 @@ class Program
             .AddEvaluator(new PromptScoreEval("groundedness", kernelEval, kernelEvalFunctions["groundedness"]))
             .AddEvaluator(new PromptScoreEval("relevance", kernelEval, kernelEvalFunctions["relevance"]))
             .AddEvaluator(new LenghtEval());
-        batchEval.SetMeterId("phi-3");
+        batchEval.SetMeterId("llama3");
 
 
         Console.WriteLine("");
-        SpectreConsoleOutput.DisplayTitleH2($"Processing single items: QA and User Story");
+        SpectreConsoleOutput.DisplayTitleH2($"Processing single items: 2 QAs and 1 User Story");
 
         // ========================================
         // evaluate a single Question and Answer
@@ -50,6 +50,16 @@ class Program
         var processResult = await qaProcessor.Process(qa);
         var results = await batchEval.ProcessSingle(processResult);
         results.EvalRunName = "QA Run 1";
+        SpectreConsoleOutput.DisplayResults(results);
+
+        qa = new QA
+        {
+            Question = "two plus two",
+            Answer = "'4' or 'four'"
+        };
+        processResult = await qaProcessor.Process(qa);
+        results = await batchEval.ProcessSingle(processResult);
+        results.EvalRunName = "QA Run 2";
         SpectreConsoleOutput.DisplayResults(results);
 
         // ========================================
