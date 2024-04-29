@@ -155,7 +155,7 @@ class Program
             // evaluate a batch of inputs for User Stories from a file
             // ========================================
             SpectreConsoleOutput.DisplayTitleH2("Processing batch of User Stories");
-            var fileName = "assets/data-02.json";
+            var fileName = "assets/data-15.json";
             Console.WriteLine($"Processing {fileName} ...");
             Console.WriteLine("");
 
@@ -167,6 +167,12 @@ class Program
             var results = await batchEval.ProcessCollection(modelOutputCollection);
             results.EvalRunName = "User Story collection from file";
             SpectreConsoleOutput.DisplayResults(results);
+
+            // convert results to json, save the results and display them in the console
+            //var json = LLMEval.Outputs.ExportToJson.CreateJson(results);
+            //LLMEval.Outputs.ExportToJson.SaveJson(results, "results.json");
+            //SpectreConsoleOutput.DisplayJson(json, "User Story collection from file", true);
+
         }
 
         if (scenarios.Contains("List of QAs generated using a LLM"))
