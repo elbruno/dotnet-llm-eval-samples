@@ -7,22 +7,28 @@ namespace QAGenerator;
 
 public class QALLMGenerator
 {
-    public static async Task<List<QA>> GenerateQACollection(Kernel kernel, int collectionCount = 5)
+    public static async Task<List<QA>> GenerateQACollection(Kernel kernel, int collectionCount = 5, string topic = "")
     {
         List < QA > res = new List < QA >();
         for (int i = 0; i < collectionCount; i++)
         {
-            var qa = await GenerateQA(kernel);
+            var qa = await GenerateQA(kernel, topic);
             res.Add(qa);
         }
         return res;
     }
 
 
-        public static async Task<QA> GenerateQA(Kernel kernel) {
+        public static async Task<QA> GenerateQA(Kernel kernel, string topic = "") {
         var pluginsDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), "_prompts");
         var plugins = kernel.CreatePluginFromPromptDirectory(pluginsDirectoryPath);
-        var result = await kernel.InvokeAsync(plugins["qagen"]);
+
+        var promptArgs = new KernelArguments
+        {
+            { "topic", topic }
+        };
+
+        var result = await kernel.InvokeAsync(plugins["qagen"], promptArgs);
         var resultString = result.ToString();
 
         var qa = new QA();

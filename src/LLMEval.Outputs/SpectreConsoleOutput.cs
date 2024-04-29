@@ -6,6 +6,7 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.TextGeneration;
 using Spectre.Console;
+using Spectre.Console.Json;
 using Spectre.Console.Rendering;
 
 namespace LLMEval.Output;
@@ -29,6 +30,18 @@ public static class SpectreConsoleOutput
         AnsiConsole.MarkupLine($"");
     }
 
+    public static void DisplayJson(string json, string title = "", bool usePanel = false)
+    {
+        var jsonSpectre = new JsonText(json);
+
+        var jsonPanel = new Panel(jsonSpectre);
+        if (usePanel)
+        {
+            jsonPanel.Header = new PanelHeader(title);
+        }
+        AnsiConsole.Write(jsonPanel);
+    }
+
     public static List<string> GetMenuOptions()
     {
         var list = new List<string> {
@@ -36,7 +49,9 @@ public static class SpectreConsoleOutput
             "2 harcoded QAs",
             "1 harcoded User Story",
             "List of User Stories from a file",
-            "List of QAs generated using a LLM"};
+            "List of QAs generated using a LLM",
+            "Type topic to generate a QA using LLM",
+            "Type the QA to be tested"};
         return list;
     }
 
@@ -62,7 +77,13 @@ public static class SpectreConsoleOutput
         return number;
     }
 
-    public static void DisplayKernels(Kernel testKernel, Kernel evalKernel)
+    public static string AskForString(string question)
+    {
+        var response = AnsiConsole.Ask<string>(@$"[green]{question}[/]");
+        return response;
+    }
+
+    public static void DisplayKernels(Kernel testKernel, Kernel evalKernel, Kernel genKernel )
     {
         // Create a table
         var table = new Table();
@@ -74,6 +95,7 @@ public static class SpectreConsoleOutput
 
         DisplayKernelInfo(testKernel, "Test", table);
         DisplayKernelInfo(evalKernel, "Eval", table);
+        DisplayKernelInfo(evalKernel, "Gen", table);
 
         // Render the table to the console
         AnsiConsole.Write(table);

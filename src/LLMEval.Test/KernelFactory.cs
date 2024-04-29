@@ -6,7 +6,11 @@ namespace LLMEval.Test;
 
 internal static class KernelFactory
 {
-    public static Kernel CreateAndConfigureKernelTest()
+    /// <summary>
+    /// Creates a new instance of the <see cref="Kernel"/> class for testing purposes.
+    /// </summary>
+    /// <returns>A new instance of the <see cref="Kernel"/> class.</returns>
+    public static Kernel CreatKernelTest()
     {
         var builder = Kernel.CreateBuilder();
         builder.AddOpenAIChatCompletion(
@@ -17,7 +21,11 @@ internal static class KernelFactory
         return builder.Build();
     }
 
-    public static Kernel CreateAndConfigureKernelEval()
+    /// <summary>
+    /// Creates a new instance of the <see cref="Kernel"/> class for evaluation purposes.
+    /// </summary>
+    /// <returns>A new instance of the <see cref="Kernel"/> class.</returns>
+    public static Kernel CreateKernelEval()
     {
         var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
 
@@ -31,4 +39,20 @@ internal static class KernelFactory
         return builder.Build();
     }
 
+    /// <summary>
+    /// Creates a new instance of the <see cref="Kernel"/> class with the necessary configuration for generating data.
+    /// </summary>
+    /// <returns>A new instance of the <see cref="Kernel"/> class.</returns>
+    public static Kernel CreateKernelGenerateData()
+    {
+        var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+
+        var builder = Kernel.CreateBuilder();
+        builder.AddAzureOpenAIChatCompletion(
+            config["AZURE_OPENAI_MODEL"],
+            config["AZURE_OPENAI_ENDPOINT"],
+            config["AZURE_OPENAI_KEY"]);
+
+        return builder.Build();
+    }
 }

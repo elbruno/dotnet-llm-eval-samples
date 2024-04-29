@@ -10,6 +10,7 @@
     <PackageReference Include="Csv" Version="2.0.93" />
     <PackageReference Include="Spectre.Console" Version="0.49.1" />
     <PackageReference Include="Spectre.Console.Extensions.Table" Version="1.0.0" />
+    <PackageReference Include="Spectre.Console.Json" Version="0.49.1" />
   </ItemGroup>
 
   <ItemGroup>
