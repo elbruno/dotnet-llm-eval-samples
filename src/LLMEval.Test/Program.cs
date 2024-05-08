@@ -19,8 +19,8 @@ class Program
         // ========================================
         SpectreConsoleOutput.DisplayTitleH2($"LLM Kernels");
         var kernelEval = KernelFactory.CreateKernelEval();
-        var kernelTest = KernelFactory.CreateKernelEval();
-        var kernelGen = KernelFactory.CreateKernelEval();
+        var kernelTest = KernelFactory.CreatKernelTest();
+        var kernelGen = KernelFactory.CreateKernelGenerateData();
         SpectreConsoleOutput.DisplayKernels(kernelTest, kernelEval, kernelGen);
 
         // ========================================

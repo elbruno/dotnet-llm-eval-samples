@@ -14,10 +14,9 @@ internal static class KernelFactory
     {
         var builder = Kernel.CreateBuilder();
         builder.AddOpenAIChatCompletion(
-            modelId: "llama3",
-            endpoint: new Uri("http://localhost:11434"),
-            apiKey: "api");
-
+            "phi3",
+            endpoint: new Uri("http://w11-eb20asus-docker-desktop-1:11434"),
+            "api");
         return builder.Build();
     }
 
@@ -28,13 +27,12 @@ internal static class KernelFactory
     public static Kernel CreateKernelEval()
     {
         var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
-
         var builder = Kernel.CreateBuilder();
 
         builder.AddAzureOpenAIChatCompletion(
-            config["AZURE_OPENAI_MODEL"],
+            config["AZURE_OPENAI_MODEL-GPT3.5"],
             config["AZURE_OPENAI_ENDPOINT"],
-            config["AZURE_OPENAI_KEY"]);
+            config["AZURE_OPENAI_APIKEY"]);
 
         return builder.Build();
     }
@@ -49,9 +47,9 @@ internal static class KernelFactory
 
         var builder = Kernel.CreateBuilder();
         builder.AddAzureOpenAIChatCompletion(
-            config["AZURE_OPENAI_MODEL"],
+            config["AZURE_OPENAI_MODEL-GPT3.5"],
             config["AZURE_OPENAI_ENDPOINT"],
-            config["AZURE_OPENAI_KEY"]);
+            config["AZURE_OPENAI_APIKEY"]);
 
         return builder.Build();
     }
